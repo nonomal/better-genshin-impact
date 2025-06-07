@@ -2,13 +2,6 @@
 using BetterGenshinImpact.GameTask.AutoFishing;
 using BetterGenshinImpact.GameTask.Model.Area.Converter;
 using BetterGenshinImpact.GameTask.Model.Area;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BetterGenshinImpact.Core.Config;
-using Compunet.YoloV8;
 using Microsoft.Extensions.Time.Testing;
 using OpenCvSharp;
 using BehaviourTree.Composites;
@@ -38,7 +31,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
             FakeTimeProvider fakeTimeProvider = new FakeTimeProvider();
 
             //
-            ThrowRod sut = new ThrowRod("-", blackboard, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
+            ThrowRod sut = new ThrowRod("-", blackboard, true, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
             BehaviourStatus actual = sut.Tick(imageRegion);
 
             //
@@ -66,7 +59,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
             FakeTimeProvider fakeTimeProvider = new FakeTimeProvider();
 
             //
-            ThrowRod sut = new ThrowRod("-", blackboard, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
+            ThrowRod sut = new ThrowRod("-", blackboard, this.useTorch, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
             BehaviourStatus actual = sut.Tick(imageRegion);
 
             //
@@ -93,7 +86,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
             FakeTimeProvider fakeTimeProvider = new FakeTimeProvider();
 
             //
-            ThrowRod sut = new ThrowRod("-", blackboard, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
+            ThrowRod sut = new ThrowRod("-", blackboard, this.useTorch, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
             BehaviourStatus actual = sut.Tick(imageRegion);
 
             //
@@ -130,7 +123,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
             };
 
             //
-            ThrowRod sut = new ThrowRod("-", blackboard, new FakeLogger(), false, new FakeInputSimulator(), new FakeTimeProvider(), drawContent: new FakeDrawContent());
+            ThrowRod sut = new ThrowRod("-", blackboard, this.useTorch, new FakeLogger(), false, new FakeInputSimulator(), new FakeTimeProvider(), drawContent: new FakeDrawContent());
             sut.Tick(imageRegion);
             var actual = sut.currentFish;
 
@@ -169,7 +162,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
             FakeTimeProvider fakeTimeProvider = new FakeTimeProvider();
 
             //
-            ThrowRod sut = new ThrowRod("-", blackboard, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
+            ThrowRod sut = new ThrowRod("-", blackboard, this.useTorch, new FakeLogger(), false, new FakeInputSimulator(), fakeTimeProvider, drawContent: new FakeDrawContent());
             BehaviourStatus actual = sut.Tick(imageRegion);
 
             //
@@ -212,7 +205,7 @@ namespace BetterGenshinImpact.UnitTest.GameTaskTests.AutoFishingTests
                     .UntilSuccess("重复抛竿")
                         .Sequence("-")
                             .PushLeaf(() => new MoveViewpointDown("调整视角至俯视", blackboard, logger, false, input))
-                            .PushLeaf(() => new ThrowRod("抛竿", blackboard, logger, false, input, timeProvider, drawContent))
+                            .PushLeaf(() => new ThrowRod("抛竿", blackboard, this.useTorch, logger, false, input, timeProvider, drawContent))
                         .End()
                     .End()
                     .Do("抛竿检查", _ => (blackboard.abort || blackboard.throwRodNoTarget || blackboard.throwRodNoBaitFish) ? BehaviourStatus.Failed : BehaviourStatus.Running)
