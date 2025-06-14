@@ -66,15 +66,21 @@ public partial class AllConfig : ObservableObject
     [ObservableProperty]
     private bool _autoFixWin11BitBlt = true;
 
-    /// <summary>
-    /// 推理使用的设备
-    /// </summary>
-    [ObservableProperty]
-    private string _inferenceDevice = "CPU";
+    // /// <summary>
+    // /// 推理使用的设备
+    // /// </summary>
+    // [ObservableProperty]
+    // private string _inferenceDevice = "CPU";
 
     [ObservableProperty]
     private List<ValueTuple<string, int, string, string>> _nextScheduledTask = [];
-
+    
+    /// <summary>
+    /// 连续执行任务时，从此任务开始执行
+    /// </summary>
+    [JsonIgnore]
+    public string NextScriptGroupName { get; set; }= string.Empty;
+    
     /// <summary>
     /// 一条龙选中使用的配置
     /// </summary>
@@ -135,7 +141,7 @@ public partial class AllConfig : ObservableObject
     ///     自动战斗配置
     /// </summary>
     public AutoFightConfig AutoFightConfig { get; set; } = new();
-    
+
     /// <summary>
     ///     自动乐曲配置 - 千音雅集
     /// </summary>
@@ -182,20 +188,28 @@ public partial class AllConfig : ObservableObject
     /// 原神按键绑定配置
     /// </summary>
     public KeyBindingsConfig KeyBindingsConfig { get; set; } = new();
+
     /// <summary>
     /// 其他配置
     /// </summary>
     public OtherConfig OtherConfig { get; set; } = new();
+
     /// <summary>
     /// 传送相关配置
     /// </summary>
     public TpConfig TpConfig { get; set; } = new();
-    
+
     /// <summary>
     /// 开发者配置
     /// </summary>
     public DevConfig DevConfig { get; set; } = new();
-    
+
+
+    /// <summary>
+    /// 硬件加速设置
+    /// </summary>
+    public HardwareAccelerationConfig HardwareAccelerationConfig { get; set; } = new();
+
     [JsonIgnore]
     public Action? OnAnyChangedAction { get; set; }
 
@@ -224,6 +238,7 @@ public partial class AllConfig : ObservableObject
         ScriptConfig.PropertyChanged += OnAnyPropertyChanged;
         PathingConditionConfig.PropertyChanged += OnAnyPropertyChanged;
         DevConfig.PropertyChanged += OnAnyPropertyChanged;
+        HardwareAccelerationConfig.PropertyChanged += OnAnyPropertyChanged;
     }
 
     public void OnAnyPropertyChanged(object? sender, EventArgs args)
